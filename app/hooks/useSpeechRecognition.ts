@@ -1,19 +1,20 @@
-"use client";
-
-import { use, useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { setTimeout } from "timers";
+import { getEventFromText } from "../services/CommandAnalyzer";
 import { usePub } from "./usePubSub";
 import useVoiceStore from "./useVoiceStore";
-import { getEventFromText } from "../services/CommandAnalyzer";
 
 let recognition: SpeechRecognition;
 let speechSynthesis: SpeechSynthesis;
 
 const grammar = "#JSGF V1.0; grammar colors; public <weak> = 'hello board';";
 
-let beat: HTMLAudioElement
+
 
 const useSpeechRecognition = () => {
+
+  const beat = useRef<HTMLAudioElement | null>()
+  // const beat = useMemo(() => new Audio("/awake.wav"), []);
 
   const awakeTimeoutId = useRef<ReturnType<typeof setTimeout>>();
 
@@ -25,7 +26,6 @@ const useSpeechRecognition = () => {
   }, []);
 
   useEffect(() => {
-    beat = new Audio("/awake.wav")
     if ("webkitSpeechRecognition" in window) {
       recognition = new webkitSpeechRecognition();
       // recognition.continuous = true;
@@ -38,7 +38,7 @@ const useSpeechRecognition = () => {
   useEffect(() => {
     console.log("useEffect", recognition);
     if (!recognition) return;
-
+    beat.current = new Audio("/awake.wav")
     recognition.onend = () => {
       startListening();
     };
@@ -78,7 +78,7 @@ const useSpeechRecognition = () => {
 
       if (["ok johnson", "play johnson", "hey johnson"].includes(text)) {
         useVoiceStore.setState({ isAwake: true });
-        beat.play();
+        beat.current?.play();
         awakeTimeoutId.current = setTimeout(() => {
           useVoiceStore.setState({ isAwake: false });
         }, 5000);

@@ -1,15 +1,14 @@
 "use client";
 
+import { Box, Button } from "@mui/material";
+import { motion } from "framer-motion";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { useState } from "react";
 import ThemeRegistry from "./components/ThemeRegistry/ThemeRegistry";
 import VoiceVisualization from "./components/VoiceVisualization";
 import "./globals.css";
 import useSpeechRecognition from "./hooks/useSpeechRecognition";
-import { useEffect, useState } from "react";
-import { Modal } from "./components/modal/Modal";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { Box, Button } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
