@@ -1,3 +1,5 @@
+"use client";
+
 import { use, useCallback, useEffect, useMemo, useRef } from "react";
 import { setTimeout } from "timers";
 import { usePub } from "./usePubSub";
