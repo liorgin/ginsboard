@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { use, useCallback, useEffect, useMemo, useRef } from "react";
 import { setTimeout } from "timers";
 import { usePub } from "./usePubSub";
 import useVoiceStore from "./useVoiceStore";
@@ -9,13 +9,7 @@ let speechSynthesis: SpeechSynthesis;
 
 const grammar = "#JSGF V1.0; grammar colors; public <weak> = 'hello board';";
 
-if ("webkitSpeechRecognition" in window) {
-  recognition = new webkitSpeechRecognition();
-  // recognition.continuous = true;
-  speechSynthesis = window.speechSynthesis;
 
-  // recognition.lang = "he";
-}
 
 const useSpeechRecognition = () => {
   const beat = useMemo(() => new Audio("/awake.wav"), []);
@@ -30,13 +24,18 @@ const useSpeechRecognition = () => {
   }, []);
 
   useEffect(() => {
-    console.log("useEffect", recognition)
+    if ("webkitSpeechRecognition" in window) {
+      recognition = new webkitSpeechRecognition();
+      // recognition.continuous = true;
+      speechSynthesis = window.speechSynthesis;
+
+      // recognition.lang = "he";
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("useEffect", recognition);
     if (!recognition) return;
-
-    const speechGrammarList = new webkitSpeechGrammarList();
-    speechGrammarList.addFromString(grammar, 1);
-
-    recognition.grammars = speechGrammarList;
 
     recognition.onend = () => {
       startListening();
@@ -71,12 +70,10 @@ const useSpeechRecognition = () => {
     recognition.onresult = (event: SpeechRecognitionEvent) => {
       clearTimeout(awakeTimeoutId.current!);
 
-  
       // recognition.stop();
       const text = event.results[0][0].transcript.toLowerCase();
       console.log(text);
 
-    
       if (["ok johnson", "play johnson", "hey johnson"].includes(text)) {
         useVoiceStore.setState({ isAwake: true });
         beat.play();
@@ -86,18 +83,18 @@ const useSpeechRecognition = () => {
         return;
       }
       if (isAwake()) {
-        useVoiceStore.setState({text: text})
+        useVoiceStore.setState({ text: text });
         const a = new SpeechSynthesisUtterance();
         a.voice = speechSynthesis.getVoices()[3];
 
-        const eventText = getEventFromText(text)
-        if(!eventText) {
+        const eventText = getEventFromText(text);
+        if (!eventText) {
           a.text = "Sorry I didn't understand";
         } else {
           a.text = `OK, ${text}`;
-          a.addEventListener('end', () => {
+          a.addEventListener("end", () => {
             publish(eventText, text);
-          })
+          });
         }
         speechSynthesis.speak(a);
       }
@@ -108,7 +105,7 @@ const useSpeechRecognition = () => {
     };
 
     recognition.start();
-    
+
     return () => {
       console.log("distroy layout stop recognition");
       recognition.onresult = null;
