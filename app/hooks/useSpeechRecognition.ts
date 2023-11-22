@@ -11,10 +11,9 @@ let speechSynthesis: SpeechSynthesis;
 
 const grammar = "#JSGF V1.0; grammar colors; public <weak> = 'hello board';";
 
-
+let beat: HTMLAudioElement
 
 const useSpeechRecognition = () => {
-  const beat = useMemo(() => new Audio("/awake.wav"), []);
 
   const awakeTimeoutId = useRef<ReturnType<typeof setTimeout>>();
 
@@ -26,6 +25,7 @@ const useSpeechRecognition = () => {
   }, []);
 
   useEffect(() => {
+    beat = new Audio("/awake.wav")
     if ("webkitSpeechRecognition" in window) {
       recognition = new webkitSpeechRecognition();
       // recognition.continuous = true;
