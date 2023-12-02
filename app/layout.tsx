@@ -9,6 +9,8 @@ import ThemeRegistry from "./components/ThemeRegistry/ThemeRegistry";
 import VoiceVisualization from "./components/VoiceVisualization";
 import "./globals.css";
 import useSpeechRecognition from "./hooks/useSpeechRecognition";
+import { useApplicationCommands } from "./hooks/useApplicationCommands";
+import { useWifiCommand } from "./hooks/useWifiCommand";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,15 +25,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   useSpeechRecognition();
+  useWifiCommand()
+  useApplicationCommands()
 
   const [type, setType] = useState("notification");
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Box
+        {/* <Box
           sx={{
-            padding: "20px",
             width: "100%",
             position: "absolute",
             display: "grid",
@@ -42,6 +45,7 @@ export default function RootLayout({
         >
           <Box
             sx={{
+              margin: "20px",
               borderRadius: "10px",
               background: "rgba(255,255,255,0.5)",
               width: type === "modal" ? "400px" : "200px",
@@ -73,7 +77,7 @@ export default function RootLayout({
               notification
             </Button>
           </Box>
-        </Box>
+        </Box> */}
         <ThemeRegistry>{children}</ThemeRegistry>
         <VoiceVisualization />
       </body>

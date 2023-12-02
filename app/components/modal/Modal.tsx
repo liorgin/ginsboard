@@ -1,45 +1,76 @@
 import { Box, Button } from "@mui/material";
-import { AnimatePresence, AnimationControls, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { ModalProps } from "../ThemeRegistry/ThemeRegistry";
+import { useEffect } from "react";
+import useModalStore from "@/app/hooks/useModalStore";
 
-const variants = {
-  // closed: { opacity: 1, y: "-100%" },
-  // notification: {y: 500, opacity: 1},
-  // modal: {y: 100, width: "90%", height: "50vh", background: "blue", opacity: 1},
+const modalPanel = {
+  hide: {
+    opcity: 0,
+    y: "-100vh",
+  },
+  show: {
+    opcity: 1,
+    y: "0%",
+  },
 };
 
-export const Modal = ({
-  open,
-  onClose,
-  modalControl
-}: {
-  open: boolean;
-  onClose: () => void;
-  modalControl: AnimationControls
-}) => {
+const overlayStyle = {
+  position: "absolute",
+  zIndex: "9999",
+  width: "100%",
+  height: "100%",
+  display: "grid",
+  placeItems: "center",
+};
 
+const containerStyle = {
+  maxWidth: "90%",
+  overflow: "hidden",
+  borderRadius: "10px",
+  backdropFilter: "blur(5px)",
+  background:
+    "linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.4))",
+  border: "1px solid rgba(255, 255, 255, 0.18)",
+  boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
+};
+
+export const Modal = () => {
+  const { isOpen, closeModal, props } = useModalStore();
+
+  useEffect(() => {
+    if (props.timeout)
+      setTimeout(() => {
+        closeModal();
+      }, props.timeout);
+  }, [closeModal, props.timeout]);
 
   return (
-    // <AnimatePresence>
-    //   {!open && (
-        <Box
-          className="modal"
-          layout
-          component={motion.div}
-          initial={['closed']}
-          animate={modalControl}
-          exit="closed"
-          sx={{
-            zIndex: "9999",
-            width: "50%",
-            height: "50%",
-            background: "red",
-          }}
-        >
-            <h1>Modal</h1>
-            <Button onClick={() => modalControl.start('modal')}>To Modal</Button>
-          <Button onClick={onClose}>close</Button>
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <Box className="modal" layout component={motion.div} sx={overlayStyle}>
+          <Box
+            component={motion.div}
+            variants={modalPanel}
+            initial="hide"
+            animate="show"
+            exit={"hide"}
+            transition={{ type: "spring", bounce: "0.25", duration: 0.5 }}
+            sx={containerStyle}
+          >
+            {props.children}
+            {props.timeout && (
+              <Box
+                sx={{ height: "8px", background: "cyan" }}
+                component={motion.div}
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: props.timeout / 1000 }}
+              />
+            )}
+          </Box>
         </Box>
-    //   )}
-    // </AnimatePresence>
+      )}
+    </AnimatePresence>
   );
 };

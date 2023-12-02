@@ -89,13 +89,13 @@ const useSpeechRecognition = () => {
         const a = new SpeechSynthesisUtterance();
         a.voice = speechSynthesis.getVoices()[3];
 
-        const eventText = getEventFromText(text);
-        if (!eventText) {
+        const event = getEventFromText(text);
+        if (!event) {
           a.text = "Sorry I didn't understand";
         } else {
-          a.text = `OK, ${text}`;
+          a.text = `${event!.confirmSpeech}`;
           a.addEventListener("end", () => {
-            publish(eventText, text);
+            publish(event.eventId, text);
           });
         }
         speechSynthesis.speak(a);

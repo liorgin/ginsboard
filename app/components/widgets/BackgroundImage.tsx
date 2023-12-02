@@ -8,7 +8,14 @@ const images = [
   { url: "/port2.jpg", credit: " Aideal Hwa on Unsplash" },
 ];
 
-const commands = ['change background', 'rotate image', 'switch photo', 'next image', 'switch background', 'switch image']
+const commands = [
+  "change background",
+  "rotate image",
+  "switch photo",
+  "next image",
+  "switch background",
+  "switch image",
+];
 
 function BackgroundImage() {
   const [currIndex, setCurrIndex] = React.useState(0);
@@ -20,10 +27,16 @@ function BackgroundImage() {
     return () => clearInterval(interval);
   }, []);
 
-  useSub("changeBackground", commands, (event: string) => {
-    console.log("changeBackground", event);
-    nextImage();
-  });
+  useSub(
+    {
+      eventId: "changeBackground",
+      confirmSpeech: "Ok,changeing the background image",
+    },
+    commands,
+    (event: string) => {
+      nextImage();
+    }
+  );
 
   const nextImage = () => {
     setCurrIndex((prev) => {
