@@ -1,8 +1,7 @@
-import { Box, Button } from "@mui/material";
-import { AnimatePresence, motion } from "framer-motion";
-import { ModalProps } from "../ThemeRegistry/ThemeRegistry";
-import { useEffect } from "react";
 import useModalStore from "@/app/hooks/useModalStore";
+import { Box } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 
 const modalPanel = {
   hide: {
