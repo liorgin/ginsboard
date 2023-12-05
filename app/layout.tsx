@@ -11,6 +11,7 @@ import "./globals.css";
 import useSpeechRecognition from "./hooks/useSpeechRecognition";
 import { useApplicationCommands } from "./hooks/useApplicationCommands";
 import { useWifiCommand } from "./hooks/useWifiCommand";
+import { Client, HydrationProvider, Server } from "react-hydration-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -78,8 +79,11 @@ export default function RootLayout({
             </Button>
           </Box>
         </Box> */}
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <HydrationProvider>
+        <Client><ThemeRegistry>{children}</ThemeRegistry>
+        </Client>
         <VoiceVisualization />
+        </HydrationProvider>
       </body>
     </html>
   );

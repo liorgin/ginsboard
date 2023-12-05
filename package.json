@@ -23,7 +23,9 @@
     "next": "14.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-hydration-provider": "^2.1.0",
     "sass": "^1.69.5",
+    "yarn": "^1.22.21",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
