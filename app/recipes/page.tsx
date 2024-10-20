@@ -11,7 +11,7 @@ export default function Home() {
 
 
     <Box sx={{background:'yellow'}}>
-    <h2>RECIPES</h2>
+    <h2>RECIPES OK</h2>
   </Box>
   )
 }
